@@ -6,7 +6,7 @@ An example bot for DSharpPlus.
 So YOU want to make a discord bot of your own? Look no further! This is exactly what you need! DSharpPlus-Example is a starter project to get you started at making your very own Discord bot using DSharpPlus! I myself am currently using the latest version of DSharpPlus-Example for this project, but you can actually use any version you'd like! *(you might have to change some stuff due to library changes.)*
 
 ### DSharpPlus
-I hear you asking, what exactly is DSharpPlus? DSharpPlus is an AMAZING discord bot library Based off of the DiscordSharp library made by LuigiFan, though it has been rewritten to fit the API standards. You can download it [here](https://github.com/NaamloosDT/DSharpPlus). It's fairly easy to use and a good way to get you into bot development!
+I hear you asking, what exactly is DSharpPlus? DSharpPlus is an AMAZING discord bot library Based off of the DiscordSharp library made by LuigiFan, though it has been rewritten to fit the API standards. You can download it [here](https://github.com/NaamloosDT/DSharpPlus) or [here (Nuget)](https://www.nuget.org/packages/DSharpPlus). It's fairly easy to use and a good way to get you into bot development!
 
 ### My Discord server
 And on top of all of that, If you need any help I would love to help you out! just join me at my personal [discord server!](https://discord.gg/0oZpaYcAjfvkDuE4) and ask anything you'd like! But please, DON'T add any bots without my permission. it's kinda rude :)
