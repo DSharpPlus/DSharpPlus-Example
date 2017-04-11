@@ -41,20 +41,20 @@ namespace DSharpPlus_Example
             // First off, the MessageCreated event.
             client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Initializing MessageCreated", DateTime.Now);
 
-            client.MessageCreated += (sender, e) =>
+            client.MessageCreated += async (e) =>
             {
                 // We DON'T want to respond to other bots, do we?
                 if (!e.Message.Author.IsBot)
                 {
                     // A simple ping- pong command
                     if (e.Message.Content == "//ping")
-                        e.Message.Respond("pong");
+                        await e.Message.Respond("pong");
 
                     // Attaching a file (make sure image.jpg exists in bot's folder!)
                     if (e.Message.Content == "//image")
                     {
                         // I've used a cat image for this, obviously
-                        e.Message.Respond("meow!", "image.jpg", "image.jpg");
+                        await e.Message.Respond("meow!", "image.jpg", "image.jpg");
                     }
 
                     // Attaching an embed
@@ -115,22 +115,22 @@ namespace DSharpPlus_Example
                         };
 
                         // And now send it c:
-                        e.Message.Respond("Example embed", embed: embed);
+                        await e.Message.Respond("Example embed", embed: embed);
                     }
 
                     // This is how we check whether a channel is private
                     if (e.Message.Content == "//private")
                     {
                         if (e.Channel.IsPrivate)
-                            e.Message.Respond("This is a private channel!");
+                            await e.Message.Respond("This is a private channel!");
                         else
-                            e.Message.Respond("This is **not** a private channel!");
+                            await e.Message.Respond("This is **not** a private channel!");
                     }
 
                     // Lets try to update our avatar
                     if (e.Message.Content == "//updateavatar")
                     {
-                        // TODO: this will be available in the next nuget update (after 1.4.0-rc1)
+                        await client.SetAvatar("avatar.png");
                     }
                 }
             };
@@ -138,21 +138,22 @@ namespace DSharpPlus_Example
             // ChannelCreated event
             client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Initializing ChannelCreated", DateTime.Now);
 
-            client.ChannelCreated += (sender, e) =>
+            client.ChannelCreated += async (e) =>
             {
                 // Lets send a message when a new channel gets created!
                 if (e.Channel.Type == ChannelType.Text && !e.Channel.IsPrivate)
-                    e.Channel.SendMessage("Nice! a new channel has been created!");
+                    await e.Channel.SendMessage("Nice! a new channel has been created!");
             };
 
             // Last but not least, the ready event
             client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Initializing Ready", DateTime.Now);
 
-            client.Ready += (sender, e) =>
+            client.Ready += async () =>
             {
+                await Task.Yield(); // f*ck the green squiggly lines :^)
                 client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Ready! Setting status message..", DateTime.Now);
                 // I recommend setting your playing status in this event.
-                client.UpdateStatus("DSharpPlus-Example by Naamloos");
+                await client.UpdateStatus("DSharpPlus-Example by Naamloos");
             };
 
             // Let's connect!
