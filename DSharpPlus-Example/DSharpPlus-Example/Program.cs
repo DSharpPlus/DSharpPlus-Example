@@ -70,7 +70,7 @@ namespace DSharpPlus_Example
                             },
 
                             // Integer color for our Embed. We'll use a nice dark red color here.
-                            Color = 4589319,
+                            Color = 0x460707,
 
                             // Our embed's description
                             Description = "A very nice example embed!",
