@@ -12,7 +12,9 @@ namespace DSharpPlus_Example
     {
         public static DiscordClient client;
         public static string token;
-        static void Main(string[] args)
+        static void Main(string[] args) => new Program().Bot(args).GetAwaiter().GetResult();
+
+        public async Task Bot(string[] args)
         {
             if (!File.Exists("token.txt"))
             {
@@ -29,7 +31,7 @@ namespace DSharpPlus_Example
                 AutoReconnect = true, // Whether you want DSharpPlus to automatically reconnect
                 DiscordBranch = Branch.Stable, // API branch you want to use. Stable is recommended!
                 LargeThreshold = 250, // Total number of members where the gateway will stop sending offline members in the guild member list
-                LogLevel = LogLevel.Unnecessary, // Minimum log level you want to use
+                LogLevel = LogLevel.Debug, // Minimum log level you want to use
                 Token = token, // Your token
                 TokenType = TokenType.Bot, // Your token type. Most likely "Bot"
                 UseInternalLogHandler = true, // Whether you want to use the internal log handler
@@ -48,13 +50,13 @@ namespace DSharpPlus_Example
                 {
                     // A simple ping- pong command
                     if (e.Message.Content == "//ping")
-                        await e.Message.Respond("pong");
+                        await e.Message.RespondAsync("pong");
 
                     // Attaching a file (make sure image.jpg exists in bot's folder!)
                     if (e.Message.Content == "//image")
                     {
                         // I've used a cat image for this, obviously
-                        await e.Message.Respond("meow!", "image.jpg", "image.jpg");
+                        await e.Message.RespondAsync(new FileStream("image.jpg", FileMode.Open), "image.jpg", "meow!");
                     }
 
                     // Attaching an embed
@@ -115,22 +117,22 @@ namespace DSharpPlus_Example
                         };
 
                         // And now send it c:
-                        await e.Message.Respond("Example embed", embed: embed);
+                        await e.Message.RespondAsync("Example embed", embed: embed);
                     }
 
                     // This is how we check whether a channel is private
                     if (e.Message.Content == "//private")
                     {
                         if (e.Channel.IsPrivate)
-                            await e.Message.Respond("This is a private channel!");
+                            await e.Message.RespondAsync("This is a private channel!");
                         else
-                            await e.Message.Respond("This is **not** a private channel!");
+                            await e.Message.RespondAsync("This is **not** a private channel!");
                     }
 
                     // Lets try to update our avatar
                     if (e.Message.Content == "//updateavatar")
                     {
-                        await client.SetAvatar("avatar.png");
+                        await client.EditCurrentUserAsync(avatar: new FileStream("avatar.png", FileMode.Open), avatar_format: ImageFormat.Png);
                     }
                 }
             };
@@ -142,27 +144,26 @@ namespace DSharpPlus_Example
             {
                 // Lets send a message when a new channel gets created!
                 if (e.Channel.Type == ChannelType.Text && !e.Channel.IsPrivate)
-                    await e.Channel.SendMessage("Nice! a new channel has been created!");
+                    await e.Channel.SendMessageAsync("Nice! a new channel has been created!");
             };
 
             // Last but not least, the ready event
             client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Initializing Ready", DateTime.Now);
 
-            client.Ready += async () =>
+            client.Ready += async e =>
             {
                 await Task.Yield(); // f*ck the green squiggly lines :^)
                 client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Ready! Setting status message..", DateTime.Now);
                 // I recommend setting your playing status in this event.
-                await client.UpdateStatus("DSharpPlus-Example by Naamloos");
+                await client.UpdateStatusAsync(new Game("DSharpPlus-Example by Naamloos"));
             };
 
             // Let's connect!
             client.DebugLogger.LogMessage(LogLevel.Info, "Bot", "Connecting..", DateTime.Now);
-            client.Connect();
+            await client.ConnectAsync();
 
             // Make sure to not automatically close down
-            while (true)
-                Console.ReadLine();
+            await Task.Delay(-1);
         }
     }
 }
