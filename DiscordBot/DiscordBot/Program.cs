@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DiscordBot
 {
@@ -6,7 +7,10 @@ namespace DiscordBot
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (var b = new Bot())
+            {
+                b.RunAsync().Wait();
+            }
         }
     }
 }
